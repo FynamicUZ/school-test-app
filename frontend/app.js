@@ -3,31 +3,29 @@ tg.expand();
 tg.ready();
 
 // In production, this points to Koyeb URL
-const API_URL = "https://your-api-url.koyeb.app";
+const API_URL = "http://127.0.0.1:8000";
 let currentTestId = null;
 let answers = {};
 let numQuestions = 0;
 
 async function loadTests() {
     try {
-        // Normally:
-        // const res = await fetch(`${API_URL}/tests/active`);
-        // const tests = await res.json();
-        
-        // Mocking for frontend building purposes:
-        const tests = [
-            { id: 1, num_questions: 10, start_time: "2023-10-01", end_time: "2023-10-31" },
-            { id: 2, num_questions: 5, start_time: "2023-11-01", end_time: "2023-11-30" }
-        ];
+        const res = await fetch(`${API_URL}/tests/active`);
+        const tests = await res.json();
         
         const container = document.getElementById('tests-container');
         container.innerHTML = '';
         
+        if (tests.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:var(--tg-theme-hint-color);">No active tests found.</p>';
+            return;
+        }
+
         tests.forEach(test => {
             let card = document.createElement('div');
             card.className = 'test-card';
             card.innerHTML = `
-                <h3>Test #${test.id}</h3>
+                <h3>${test.title || `Test #${test.id}`}</h3>
                 <p>Questions: ${test.num_questions}</p>
                 <button class="btn" onclick="takeTest(${test.id}, ${test.num_questions})">Take Test</button>
             `;

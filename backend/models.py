@@ -17,6 +17,7 @@ class Test(Base):
     __tablename__ = "tests"
     
     id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, default="Untitled Test")
     teacher_id = Column(Integer, ForeignKey("users.id"))
     num_questions = Column(Integer)
     answer_key = Column(String) # E.g. "A,B,C,D"

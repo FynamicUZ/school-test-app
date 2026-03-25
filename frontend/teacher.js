@@ -15,17 +15,19 @@ function showTab(tab) {
 }
 
 async function createTest() {
+    const title = document.getElementById('test-title').value;
     const num = document.getElementById('num-questions').value;
     const key = document.getElementById('answer-key').value;
     const start = document.getElementById('start-time').value;
     const end = document.getElementById('end-time').value;
 
-    if (!num || !key || !start || !end) {
+    if (!title || !num || !key || !start || !end) {
         tg.showAlert("Please fill all fields");
         return;
     }
 
     const payload = {
+        title: title,
         teacher_id: tg.initDataUnsafe?.user?.id || 1,
         num_questions: parseInt(num),
         answer_key: key,

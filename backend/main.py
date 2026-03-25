@@ -60,6 +60,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 class TestCreate(BaseModel):
+    title: str = "Untitled Test"
     teacher_id: int
     num_questions: int
     answer_key: str
@@ -68,6 +69,7 @@ class TestCreate(BaseModel):
 
 class TestResponse(BaseModel):
     id: int
+    title: str
     teacher_id: int
     num_questions: int
     start_time: datetime
@@ -109,6 +111,7 @@ def get_user(telegram_id: str, db: Session = Depends(database.get_db)):
 @app.post("/tests/", response_model=TestResponse)
 def create_test(test: TestCreate, db: Session = Depends(database.get_db)):
     db_test = models.Test(
+        title=test.title,
         teacher_id=test.teacher_id,
         num_questions=test.num_questions,
         answer_key=test.answer_key,
