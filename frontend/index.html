@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>School Test App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1 id="title">Active Tests</h1>
+        <div id="tests-container"></div>
+        <div id="test-view" style="display: none;">
+            <div id="questions-container"></div>
+            <button id="submit-btn" class="btn" style="display: none;" onclick="submitTest()">Submit Answers</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

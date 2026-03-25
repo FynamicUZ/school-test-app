@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1 id="title">Teacher Dashboard</h1>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('create')">Create Test</button>
+            <button class="tab-btn" onclick="showTab('results')">View Results</button>
+        </div>
+
+        <!-- Create Test Tab -->
+        <div id="create-tab" class="tab-content">
+            <div class="form-group">
+                <label>Number of Questions</label>
+                <input type="number" id="num-questions" placeholder="e.g. 10" min="1">
+            </div>
+            <div class="form-group">
+                <label>Answer Key (Comma separated)</label>
+                <input type="text" id="answer-key" placeholder="A,B,C,D,A...">
+            </div>
+            <div class="form-group">
+                <label>Start Time</label>
+                <input type="datetime-local" id="start-time">
+            </div>
+            <div class="form-group">
+                <label>End Time</label>
+                <input type="datetime-local" id="end-time">
+            </div>
+            <button class="btn" onclick="createTest()">Create & Broadcast</button>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="results-tab" class="tab-content" style="display: none;">
+            <div id="results-list">
+                <p>Select a test to view Rasch Analysis</p>
+                <div id="tests-list-container"></div>
+            </div>
+            <div id="analysis-view" style="display: none;">
+                <button class="btn-sec" onclick="backToResults()">← Back</button>
+                <h3>Rasch Analysis</h3>
+                <div id="rasch-results"></div>
+            </div>
+        </div>
+    </div>
+    <script src="teacher.js"></script>
+</body>
+</html>
