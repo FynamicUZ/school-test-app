@@ -84,15 +84,24 @@ async function viewAnalysis(testId) {
         const data = await res.json();
         
         if (!data.abilities || data.abilities.length === 0) {
-            resDiv.innerHTML = '<p style="color:var(--tg-theme-hint-color);">No submissions yet. Analysis will be available after students take the test.</p>';
+            resDiv.innerHTML = '<p style="color:var(--tg-theme-hint-color);">No submissions yet.</p>';
             return;
         }
         
-        let html = '<h4>Student Abilities (Beta)</h4><ul>';
-        data.abilities.forEach((b, i) => html += `<li>Student ${i+1}: ${b.toFixed(2)}</li>`);
-        html += '</ul><h4>Item Difficulties (Delta)</h4><ul>';
-        data.difficulties.forEach((d, i) => html += `<li>Question ${i+1}: ${d.toFixed(2)}</li>`);
-        html += '</ul>';
+        let html = '<div class="analysis-section"><h4>Student Performance</h4>';
+        data.abilities.forEach((b, i) => {
+            const mastery = b > 0.5 ? "High" : (b < -0.5 ? "Low" : "Average");
+            const color = b > 0.5 ? "#2ecc71" : (b < -0.5 ? "#e74c3c" : "#f1c40f");
+            html += `<div class="res-item">Student ${i+1}: <b style="color:${color}">${mastery} (${b.toFixed(1)})</b></div>`;
+        });
+        
+        html += '</div><div class="analysis-section"><h4>Item Difficulty</h4>';
+        data.difficulties.forEach((d, i) => {
+            const diff = d > 0.5 ? "Hard" : (d < -0.5 ? "Easy" : "Balanced");
+            const color = d > 0.5 ? "#e74c3c" : (d < -0.5 ? "#2ecc71" : "#3498db");
+            html += `<div class="res-item">Q${i+1}: <b style="color:${color}">${diff}</b></div>`;
+        });
+        html += '</div>';
         
         resDiv.innerHTML = html;
     } catch (e) {

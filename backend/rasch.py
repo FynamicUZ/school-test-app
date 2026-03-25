@@ -12,13 +12,19 @@ def calculate_rasch(answers_matrix: List[List[int]]) -> Tuple[List[float], List[
         person_ability (beta): List of abilities for each student
         item_difficulty (delta): List of difficulties for each question
     """
-    scores = np.array(answers_matrix)
+    scores = np.array(answers_matrix, dtype=float)
     
     if scores.size == 0:
         return [], []
         
     num_students, num_questions = scores.shape
     
+    # Extreme Score Correction (Standard Rasch practice: adjust 0 or 100% scores by 0.5)
+    for i in range(num_students):
+        s = np.sum(scores[i])
+        if s == 0: scores[i, 0] = 0.5
+        if s == num_questions: scores[i, 0] = num_questions - 0.5
+        
     beta = np.zeros(num_students)
     delta = np.zeros(num_questions)
     
