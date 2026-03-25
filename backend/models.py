@@ -23,6 +23,7 @@ class Test(Base):
     answer_key = Column(String) # E.g. "A,B,C,D"
     start_time = Column(DateTime)
     end_time = Column(DateTime)
+    sent_leaderboard = Column(Boolean, default=False)
     file_id = Column(String, nullable=True) # Telegram file_id for the test distribution
     
     teacher = relationship("User", back_populates="tests_created", foreign_keys=[teacher_id])

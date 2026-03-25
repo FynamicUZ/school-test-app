@@ -29,21 +29,44 @@ def get_rasch_analysis(test_id: int, db: Session = Depends(database.get_db)):
         
     subs = db.query(models.Submission).filter(models.Submission.test_id == test_id).all()
     if not subs:
-        return {"abilities": [], "difficulties": []}
+        return {"abilities": [], "difficulties": [], "student_details": []}
         
     # Prepare answer matrix (1 for correct, 0 for wrong)
     key = test.answer_key.split(',')
     matrix = []
+    student_details = []
+    
     for s in subs:
         student_answers = s.answers.split(',')
         # Compare student answers with key
-        row = [1 if student_answers[i] == key[i] else 0 for i in range(len(key))]
+        row = [1 if i < len(student_answers) and student_answers[i] == key[i] else 0 for i in range(len(key))]
         matrix.append(row)
         
+        # Get student name
+        user = db.query(models.User).filter(models.User.telegram_id == s.student_id).first()
+        name = user.name if user and user.name else f"Student {s.student_id}"
+        
+        student_details.append({
+            "name": name,
+            "score": sum(row),
+            "total": len(key),
+            "percentage": round(sum(row) / len(key) * 100, 1),
+            "matrix": row
+        })
+        
     abilities, difficulties = rasch.calculate_rasch(matrix)
-    return {"abilities": abilities, "difficulties": difficulties}
+    
+    # Add ability to student_details
+    for i in range(len(student_details)):
+        student_details[i]["ability"] = abilities[i]
+        
+    return {
+        "abilities": abilities, 
+        "difficulties": difficulties, 
+        "student_details": student_details
+    }
 
-# --------- Routes ---------
+# --------- Schemas ---------
 
 class UserCreate(BaseModel):
     telegram_id: str
@@ -74,6 +97,7 @@ class TestResponse(BaseModel):
     num_questions: int
     start_time: datetime
     end_time: datetime
+    sent_leaderboard: bool
     file_id: Optional[str] = None
 
     class Config:
@@ -81,7 +105,7 @@ class TestResponse(BaseModel):
 
 class SubmissionCreate(BaseModel):
     test_id: int
-    student_id: int
+    student_id: str
     answers: str
 
 # --------- Routes ---------
