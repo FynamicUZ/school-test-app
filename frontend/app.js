@@ -111,11 +111,11 @@ async function submitTest() {
     };
     
     try {
-        // await fetch(`${API_URL}/submissions/`, {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(payload)
-        // });
+        await fetch(`${API_URL}/submissions/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
         tg.showAlert("Answers submitted successfully!");
         tg.close();
     } catch (e) {

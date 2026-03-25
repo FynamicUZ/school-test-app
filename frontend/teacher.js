@@ -83,6 +83,11 @@ async function viewAnalysis(testId) {
         const res = await fetch(`${API_URL}/tests/${testId}/rasch`);
         const data = await res.json();
         
+        if (!data.abilities || data.abilities.length === 0) {
+            resDiv.innerHTML = '<p style="color:var(--tg-theme-hint-color);">No submissions yet. Analysis will be available after students take the test.</p>';
+            return;
+        }
+        
         let html = '<h4>Student Abilities (Beta)</h4><ul>';
         data.abilities.forEach((b, i) => html += `<li>Student ${i+1}: ${b.toFixed(2)}</li>`);
         html += '</ul><h4>Item Difficulties (Delta)</h4><ul>';
